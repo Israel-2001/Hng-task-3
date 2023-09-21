@@ -95,11 +95,6 @@ function App() {
     setSearchTerm(searchTerm);
   }
 
-  // Filter images based on search term
-  const filteredImages = images.filter((image) =>
-    image.tags.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div>
       <div className="relative w-full">
@@ -117,18 +112,25 @@ function App() {
         className='sm:grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 
         xl:grid-cols-3 justify-center items-center'  
       >
-        {filteredImages.map((image, index) => (
-          <li className="mx-8 mb-6 px-2" key={image.id}>
-            <div className="bg-gray-900 pb-3 my-10 text-white">
-              <img 
-                src={image.url} 
-                alt={`Image ${index}`}
-                className="rounded-[15px] w-full h-[50%]"
-              />
-              <p className='relative bottom-16 uppercase text-center py-2 px-6 bg-amber-400 w-48 rounded mx-auto text-lg font-medium'>{image.title}</p>
-            </div>
-          </li>
-        ))}
+        {initialImages.map((image, index) => {
+        if (
+            image.tags.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            searchTerm === ''
+          ) {
+            return (
+              <li className="mx-8 mb-6 px-2" key={image.id}>
+                <div className="bg-gray-900 pb-3 my-10 text-white">
+                  <img 
+                    src={image.url} 
+                    alt={`Image ${index}`}
+                    className="rounded-[15px] w-full h-[50%]"
+                  />
+                 <p className='relative bottom-16 uppercase text-center py-2 px-6 bg-amber-400 w-48 rounded mx-auto text-lg font-medium'>{image.title}</p>
+                </div>
+              </li>
+            );
+          }
+        })}
       </ul>
     </div>
   );
