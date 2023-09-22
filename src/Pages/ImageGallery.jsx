@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sortable from 'sortablejs';
+import Spinner from '../components/Spinner';
 
 // Sample image data
     const initialImages = [
@@ -69,16 +70,26 @@ import Sortable from 'sortablejs';
 function App() {
   const [images, setImages] = useState(initialImages);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
   // Initialize sortable.js
   const sortableContainer = React.createRef();
 
+  useEffect(() => {
+    setTimeout(() => {
+      setImages(initialImages);
+      setLoading(false);
+    }, 2000)
+  }, [])
+
   React.useEffect(() => {
-    const container = sortableContainer.current;
-    Sortable.create(container, {
-      animation: 150,
-      onEnd: handleDragEnd,
-    });
+    if (sortableContainer.current) {
+      const container = sortableContainer.current;
+      Sortable.create(container, {
+        animation: 150,
+        onEnd: handleDragEnd,
+      });
+    }
   }, []);
 
   // Handle drag-and-drop
@@ -93,6 +104,10 @@ function App() {
   function handleSearchChange(event) {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
+  }
+
+  if(loading) {
+    return <Spinner />;
   }
 
   return (
